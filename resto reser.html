@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Reservation - RIAD SNOW</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary-color: #c9a668;
+            --secondary-color: #8b6f47;
+            --accent-color: #d4af37;
+            --bg-light: #fafafa;
+            --bg-white: #ffffff;
+            --text-dark: #2c2c2c;
+            --text-light: #666;
+            --border-light: #e8e8e8;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fef9f3 0%, #fdfbf7 50%, #fef9f3 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Decorative Floating Elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 10%;
+            left: 5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(201, 166, 104, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 15s ease-in-out infinite;
+            z-index: -1;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 10%;
+            right: 5%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite reverse;
+            z-index: -1;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(10deg); }
+            66% { transform: translate(-20px, 20px) rotate(-10deg); }
+        }
+        /* Sparkle decorations */
+        .sparkle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 3s ease-in-out infinite;
+            z-index: -1;
+        }
+        .sparkle:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 40%; right: 20%; animation-delay: 1s; }
+        .sparkle:nth-child(3) { bottom: 30%; left: 25%; animation-delay: 2s; }
+        .sparkle:nth-child(4) { top: 60%; right: 15%; animation-delay: 1.5s; }
+        .sparkle:nth-child(5) { bottom: 20%; right: 30%; animation-delay: 0.5s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 0.8; transform: scale(1); }
+        }
+        .reservation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 70px;
+            padding: 70px 40px;
+            background: linear-gradient(135deg, rgba(201, 166, 104, 0.12) 0%, rgba(212, 175, 55, 0.08) 100%);
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(201, 166, 104, 0.15);
+        }
+        /* Header decorative elements */
+        .page-header::before {
+            content: '✦';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            opacity: 0.3;
+            animation: rotate 20s linear infinite;
+        }
+        .page-header::after {
+            content: '✦';
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            opacity: 0.3;
+            animation: rotate 20s linear infinite reverse;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            text-shadow: 2px 2px 4px rgba(201, 166, 104, 0.1);
+            animation: fadeInDown 0.8s ease;
+        }
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-header .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            font-weight: 300;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .page-header .decorative-line {
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), var(--accent-color), transparent);
+            margin: 25px auto;
+            position: relative;
+            animation: expandLine 1s ease 0.5s both;
+        }
+        @keyframes expandLine {
+            from { width: 0; }
+            to { width: 120px; }
+        }
+        .decorative-line::before,
+        .decorative-line::after {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+        .decorative-line::before {
+            left: -30px;
+        }
+        .decorative-line::after {
+            right: -30px;
+        }
+        .primary {
+            color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        /* Restaurant Cards */
+        .restaurants-section {
+            margin-bottom: 80px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--text-dark);
+            position: relative;
+            padding-bottom: 20px;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        .restaurant-card {
+            background: var(--bg-white);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 25px var(--shadow);
+            border: 2px solid transparent;
+            position: relative;
+        }
+        /* Glow effect on hover */
+        .restaurant-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 25px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out; 
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+        .restaurant-card:hover::before {
+            opacity: 0.5;
+        }
+        .restaurant-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(201, 166, 104, 0.3);
+        }
+        /* Radio button styling */
+        .restaurant-selector {
+            position: absolute;
+            opacity: 0;
+        }
+        .restaurant-selector:checked + .restaurant-card {
+            border-color: var(--primary-color);
+            box-shadow: 0 15px 50px rgba(201, 166, 104, 0.35);
+            transform: translateY(-15px);
+        }
+        .restaurant-selector:checked + .restaurant-card::before {
+            opacity: 1;
+        }
+        .restaurant-selector:checked + .restaurant-card::after {
+            content: '✓';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            z-index: 10;
+            animation: checkmark 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 5px 20px rgba(201, 166, 104, 0.5);
+        }
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(0deg); }
+            50% { transform: scale(1.3) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+        .restaurant-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+        }
+        .restaurant-image-container {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+        .restaurant-image-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.02) 100%);
+        }
+        .restaurant-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            filter: brightness(0.95);
+        }
+        .restaurant-card:hover .restaurant-image {
+            transform: scale(1.15);
+            filter: brightness(1);
+        }
+        .restaurant-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(201, 166, 104, 0.3);
+        }
+        .restaurant-info {
+            padding: 40px;
+            background: linear-gradient(to bottom, white, rgba(254, 249, 243, 0.5));
+        }
+        .restaurant-info h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-dark);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .restaurant-info h3 i {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-right: 10px;
+        }
+        .restaurant-info p {
+            color: var(--text-light);
+            line-height: 1.9;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+        .restaurant-features {
+            list-style: none;
+            padding: 0;
+        }
+        .restaurant-features li {
+            padding: 12px 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(201, 166, 104, 0.1);
+            transition: all 0.3s ease;
+        }
+        .restaurant-features li:last-child {
+            border-bottom: none;
+        }
+        .restaurant-features li:hover {
+            padding-left: 10px;
+            color: var(--text-dark);
+        }
+        .restaurant-features li i {
+            color: var(--primary-color);
+            margin-right: 15px;
+            width: 20px;
+        }
+        /* Reservation Form */
+        .reservation-form {
+            background: linear-gradient(135deg, white 0%, rgba(254, 249, 243, 0.8) 100%);
+            border-radius: 30px;
+            padding: 70px 60px;
+            box-shadow: 0 15px 70px rgba(201, 166, 104, 0.2);
+            border: 1px solid rgba(201, 166, 104, 0.2);
+            position: relative;
+            overflow: hidden;
+            width: 90%;
+            margin-left: 75px;
+        }
+        /* Form decorative corner elements */
+        .reservation-form::before,
+        .reservation-form::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(201, 166, 104, 0.2);
+        }
+        .reservation-form::before {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+            border-radius: 30px 0 0 0;
+        }
+        .reservation-form::after {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+            border-radius: 0 0 30px 0;
+        }
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+            color: var(--text-dark);
+            position: relative;
+        }
+        .form-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 60px;
+            font-size: 1.05rem;
+        }
+
+        .form-section {
+            margin-bottom: 45px;
+        }
+        .form-section-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(201, 166, 104, 0.15);
+        }
+        .form-section-heading i {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.4rem;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .form-group label i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            width: 18px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 18px 22px;
+            background: var(--bg-white);
+            border: 2px solid var(--border-light);
+            border-radius: 15px;
+            color: var(--text-dark);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--bg-white);
+            box-shadow: 0 0 0 4px rgba(201, 166, 104, 0.1), 0 5px 15px rgba(201, 166, 104, 0.15);
+            transform: translateY(-2px);
+        }
+        .form-control::placeholder {
+            color: #aaa;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a668' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            padding-right: 50px;
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 150px;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+        }
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 22px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 40px;
+            box-shadow: 0 10px 35px rgba(201, 166, 104, 0.35);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-submit:hover::before {
+            width: 310px;
+            height: 300px;
+        }
+        .btn-submit:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 50px rgba(201, 166, 104, 0.5);
+        }
+        .btn-submit:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        .btn-submit i {
+            margin-right: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .btn-submit span {
+            position: relative;
+            z-index: 1;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .reservation-container {
+                padding: 0 15px;
+            }
+
+            .page-header {
+                padding: 50px 25px;
+            }
+
+            .page-header h1 {
+                font-size: 2.8rem;
+            }
+
+            .reservation-form {
+                padding: 50px 30px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Required field indicator */
+        .form-control:required:invalid {
+            border-color: var(--border-light);
+        }
+        .form-control:required:valid {
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sparkle decorations -->
+<div class="sparkle"></div>
+<div class="sparkle"></div>
+<div class="sparkle"></div>
+<div class="sparkle"></div>
+<div class="sparkle"></div>
+
+<!-- Main Content -->
+<main class="reservation-container">
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Restaurant <span class="primary">Reservation</span></h1>
+        <div class="decorative-line"></div>
+        <p class="subtitle">Reserve your table for an unforgettable dining experience</p>
+    </div>
+
+    <!-- Reservation Form -->
+    <form action="#" method="POST">
+
+        <!-- Restaurant Selection -->
+        <div class="restaurants-section">
+            <h2 class="section-title">Choose Your Dining Experience</h2>
+            <div class="restaurant-grid">
+                
+                <!-- Moroccan Restaurant -->
+                <label class="restaurant-label">
+                    <input type="radio" name="restaurant" value="moroccan" class="restaurant-selector" required>
+                    <div class="restaurant-card">
+                        <div class="restaurant-image-container">
+                            <img src="pic/dar3.jpg" alt="Moroccan Restaurant" class="restaurant-image">
+                            <div class="restaurant-badge">🌙 Traditional</div>
+                        </div>
+                        <div class="restaurant-info">
+                            <h3><i class="fas fa-mosque"></i>Dar Al-Diyafa</h3>
+                            <p>Immerse yourself in the rich flavors of authentic Moroccan cuisine. Our chefs craft traditional dishes with refined techniques, offering an exquisite journey through Morocco's culinary heritage.</p>
+                            <ul class="restaurant-features">
+                                <li><i class="fas fa-utensils"></i> Authentic Tagines & Couscous</li>
+                                <li><i class="fas fa-star"></i> Traditional Décor & Ambiance</li>
+                                <li><i class="fas fa-clock"></i> Open Daily:  09h00 – 14h30 | 19h00 – 00h00</li>
+                                <li><i class="fas fa-wine-glass"></i> Mint Tea & Moroccan Pastries</li>
+                            </ul>
+                        </div>
+                    </div>
+                </label>
+
+                <!-- European Restaurant -->
+                <label class="restaurant-label">
+                    <input type="radio" name="restaurant" value="european" class="restaurant-selector" required>
+                    <div class="restaurant-card">
+                        <div class="restaurant-image-container">
+                            <img src="pic/resto7.jpg" alt="European Restaurant" class="restaurant-image">
+                            <div class="restaurant-badge">🍷 Fine Dining</div>
+                        </div>
+                        <div class="restaurant-info">
+                            <h3><i class="fas fa-crown"></i> The Summit</h3>
+                            <p>Experience sophisticated European cuisine in an elegant setting. Our internationally inspired menu features French, Italian, and contemporary dishes paired with premium wines.</p>
+                            <ul class="restaurant-features">
+                                <li><i class="fas fa-utensils"></i> French & Italian Specialties</li>
+                                <li><i class="fas fa-star"></i> Elegant Fine Dining</li>
+                                <li><i class="fas fa-clock"></i> Dinner Service:  12h00 – 14h30 | 19h00 – 23h30</li>
+                                <li><i class="fas fa-wine-bottle"></i> Curated Wine Collection</li>
+                            </ul>
+                        </div>
+                    </div>
+                </label>
+
+            </div>
+        </div>
+
+        <!-- Form Details -->
+        <div class="reservation-form">
+            <h2 class="form-title">Complete Your Reservation</h2>
+            <p class="form-subtitle">Fill in the details below to reserve your table</p>
+            
+            <!-- Personal Information -->
+            <div class="form-section">
+                <h3 class="form-section-heading">
+                    <i class="fas fa-user-circle"></i>
+                    Personal Information
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="fullName" name="fullName" class="form-control" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="john.doe@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="+212 6XX XXX XXX" required>
+                </div>
+            </div>
+
+            <!-- Reservation Details -->
+            <div class="form-section">
+                <h3 class="form-section-heading">
+                    <i class="fas fa-calendar-alt"></i>
+                    Reservation Details
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date"><i class="fas fa-calendar"></i> Date</label>
+                        <input type="date" id="date" name="date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="time"><i class="fas fa-clock"></i> Time</label>
+                        <input type="time" id="time" name="time" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="guests"><i class="fas fa-users"></i> Number of Guests</label>
+                    <select id="guests" name="guests" class="form-control" required>
+                        <option value="">Select number of guests</option>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5 Guests</option>
+                        <option value="6">6 Guests</option>
+                        <option value="7">7 Guests</option>
+                        <option value="8">8 Guests</option>
+                        <option value="more">More than 8 Guests</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Special Requests -->
+            <div class="form-section">
+                <h3 class="form-section-heading">
+                    <i class="fas fa-comments"></i>
+                    Special Requests
+                </h3>
+                
+                <div class="form-group">
+                    <label for="specialRequests"><i class="fas fa-comment-dots"></i> Additional Information (Optional)</label>
+                    <textarea id="specialRequests" name="specialRequests" class="form-control" placeholder="Dietary restrictions, allergies, special occasions, seating preferences..."></textarea>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-check-circle"></i>
+                <span>Confirm Reservation</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</main>
+
+</body>
+</html>
