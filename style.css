@@ -49,7 +49,7 @@ body::after {
 .amina{
     width: 100%;
     height: 840px; /* علو الزخرفة */
-    background-image: url('pic/sepa2.png');
+    background-image: url('pic/sep');
     background-repeat: repeat-x;   /* باش تتعاود أفقياً */
     background-size: auto 100%;
     background-position: center;
@@ -507,8 +507,8 @@ a {
 
 }
 
-.c.img1 { background-image: url('pic/dar4.jpg'); opacity: 1; }
-.c .img2 { background-image: url('pic/suit12.jpg'); opacity: 0; }
+.c.img1 { background-image: url('dar4.jpg'); opacity: 1; }
+.c .img2 { background-image: url('suit12.jpg'); opacity: 0; }
 
 #toggle1:checked ~ .img1 { opacity: 0; }
 #toggle1:checked ~ .img2 { opacity: 1; }
@@ -521,8 +521,8 @@ a {
   transition: opacity 0.5s ease;
 
 }
-.ccc .im1 { background-image: url('pic/room\ lux.jpg'); opacity: 1; }
-.ccc .im2 { background-image: url('pic/room19.jpg'); opacity: 0; }
+.ccc .im1 { background-image: url('room\ lux.jpg'); opacity: 1; }
+.ccc .im2 { background-image: url('room19.jpg'); opacity: 0; }
 
 
 #toggle2:checked ~ .im1 { opacity: 0; }
